@@ -27,14 +27,14 @@ def calculate_system_with_a(l_multi, n_multiplier,n_exp,amplitude):
 
     v = np.zeros_like(u)
     acc = np.zeros_like(u)
-    damping = 20.0
+    damping = 30.0
     u_log = []
 
     dt = 1e-5
     steps = int(0.7 * 10e5)
 
     time_steps = np.linspace(0, dt * steps, steps)
-    excitation_x, excitation_v = linear_frequency_sweep(time_steps, 15, 30, dt*steps, amplitude)
+    excitation_x, excitation_v = linear_frequency_sweep(time_steps, 15, 30, dt * steps, amplitude)
     for i, time in enumerate(time_steps):
 
         u[0] = excitation_x[i]
@@ -61,12 +61,12 @@ def calculate_system_with_a(l_multi, n_multiplier,n_exp,amplitude):
 
 #u_1 = calculate_system_with_a(1, 0.0001, 2.0)
 
-
-for n in np.linspace(0.0005,0.010,12):
-    u_1 = calculate_system_with_a(0.8, 3.2, 2.0, n)
+for n in np.linspace(0.0005, 0.010, 7):
+    u_1 = calculate_system_with_a(0.8, 5.2, 2.0, n)
     analytic_signal = hilbert(u_1[:, 1])
     amplitude_envelope = np.abs(analytic_signal)
     plt.plot(amplitude_envelope)
+
 #u_2 = calculate_system_with_a(0.8, 3.2, 2.0, 0.006)
 #u_3 = calculate_system_with_a(0.8, 3.2, 2.0, 0.007)
 #u_4 = calculate_system_with_a(0.8, 3.2, 2.0, 0.008)
