@@ -7,8 +7,8 @@ import pickle
 
 def calculate_system_with_a(l_multi, n_multiplier,n_exp,amplitude):
 
-    n_springs = 1
-    n_nodes = 2
+    n_springs = 4
+    n_nodes = 5
 
     # this should be separate matrix assembly method
     C = lil_matrix((n_springs, n_nodes))
@@ -16,13 +16,22 @@ def calculate_system_with_a(l_multi, n_multiplier,n_exp,amplitude):
     C[0, 0] = -1  # Spring 0: 0 ↔ 1
     C[0, 1] = +1
 
+    C[1, 1] = -1  # Spring 1: 1 ↔ 2 (nonlinear)
+    C[1, 2] = +1
+
+    C[2, 2] = -1  # Spring 2: 2 ↔ 3
+    C[2, 3] = +1
+
+    C[3, 3] = -1  # Spring 2: 2 ↔ 3
+    C[3, 4] = +1
+
     C = C.tocsr()
 
-    k = np.array([10000.0])      # stiffnesses
-    a = np.array([n_exp])           # power exponent: 2.0 means nonlinear
+    k = np.array([40000.0, 40000.0, 40000.0, 40000.0])      # stiffnesses
+    a = np.array([n_exp, n_exp, n_exp, n_exp])           # power exponent: 2.0 means nonlinear
 
-    u = np.array([0.0, 0.0])
-    M = np.eye(2)
+    u = np.array([0.0, 0.0, 0.0, 0.0, 0.0])
+    M = np.eye(5)
     M_inv = np.linalg.inv(M)
 
     v = np.zeros_like(u)
@@ -31,10 +40,11 @@ def calculate_system_with_a(l_multi, n_multiplier,n_exp,amplitude):
     u_log = []
 
     dt = 1e-5
-    steps = int(1.3 * 10e5)
+    steps = int(2.2 * 10e5)
 
     time_steps = np.linspace(0, dt * steps, steps)
-    excitation_x, excitation_v = linear_frequency_sweep(time_steps, 5, 120, dt * steps, amplitude)
+    excitation_x, excitation_v = linear_frequency_sweep(time_steps, 5, 300, dt * steps, amplitude)
+    
     for i, time in enumerate(time_steps):
 
         u[0] = excitation_x[i]
@@ -61,15 +71,14 @@ def calculate_system_with_a(l_multi, n_multiplier,n_exp,amplitude):
 
 #u_1 = calculate_system_with_a(1, 0.0001, 2.0)
 data_storage = []
-for n in np.linspace(0.0005, 0.050, 7):
-    u_1 = calculate_system_with_a(0.8, 5.2, 2.0, n)
-    data_storage.append(u_1)
-    analytic_signal = hilbert(u_1[:, 1])
+for n in np.linspace(0, 15, 5):
+    u_1 = calculate_system_with_a(0.8, n, 2.0, 0.005)
+    data_storage.append(u_1)    
+    analytic_signal = hilbert(u_1[:, 4])
     amplitude_envelope = np.abs(analytic_signal)
     plt.plot(amplitude_envelope)
 
-pickle.dump((data_storage), open(f'one_spring.pkl', 'wb'))
-
+pickle.dump((data_storage), open(f'two_springs.pkl', 'wb'))
 #u_2 = calculate_system_with_a(0.8, 3.2, 2.0, 0.006)
 #u_3 = calculate_system_with_a(0.8, 3.2, 2.0, 0.007)
 #u_4 = calculate_system_with_a(0.8, 3.2, 2.0, 0.008)
