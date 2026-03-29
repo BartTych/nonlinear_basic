@@ -55,7 +55,7 @@ def calculate_nonlinear_spring_system(l_multi, n_multiplier,n_exp,amplitude):
         u += v * dt
         v += acc * dt
         # explicit
-        #u += v * dt
+        # u += v * dt
         
         if i % 100 == 0:
             u_log.append(u.copy())

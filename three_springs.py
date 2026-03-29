@@ -19,8 +19,8 @@ def calculate_system_with_a(l_multi, n_multiplier,n_exp,amplitude):
     C[1, 1] = -1  # Spring 1: 1 ↔ 2 (nonlinear)
     C[1, 2] = +1
 
-    C[2, 2] = -1  # Spring 2: 2 ↔ 3
-    C[2, 3] = +1
+    C[2, 2] = +1  # Spring 2: 2 ↔ 3
+    C[2, 3] = -1
 
     C = C.tocsr()
 
@@ -58,7 +58,7 @@ def calculate_system_with_a(l_multi, n_multiplier,n_exp,amplitude):
         u += v * dt
         v += acc * dt
         # explicit
-        u += v * dt
+        # u += v * dt
         
         if i % 100 == 0:
             u_log.append(u.copy())
@@ -70,12 +70,12 @@ def calculate_system_with_a(l_multi, n_multiplier,n_exp,amplitude):
 data_storage = []
 for n in np.linspace(0, 15, 5):
     u_1 = calculate_system_with_a(0.8, n, 2.0, 0.01)
-    data_storage.append(u_1)    
+    #data_storage.append(u_1)    
     analytic_signal = hilbert(u_1[:, 3])
     amplitude_envelope = np.abs(analytic_signal)
     plt.plot(amplitude_envelope)
 
-pickle.dump((data_storage), open(f'two_springs.pkl', 'wb'))
+#pickle.dump((data_storage), open(f'two_springs.pkl', 'wb'))
 #u_2 = calculate_system_with_a(0.8, 3.2, 2.0, 0.006)
 #u_3 = calculate_system_with_a(0.8, 3.2, 2.0, 0.007)
 #u_4 = calculate_system_with_a(0.8, 3.2, 2.0, 0.008)

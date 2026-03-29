@@ -61,7 +61,7 @@ def calculate_system_with_a(l_multi, n_multiplier,n_exp,amplitude):
 
 #u_1 = calculate_system_with_a(1, 0.0001, 2.0)
 data_storage = []
-for n in np.linspace(0.0005, 0.050, 7):
+for n in np.linspace(0.0005, 0.050, 2):
     u_1 = calculate_system_with_a(0.8, 5.2, 2.0, n)
     data_storage.append(u_1)
     analytic_signal = hilbert(u_1[:, 1])
